@@ -64,7 +64,7 @@ for event in lcm_log:
     #    break
 
 xsens_dataframe = pd.DataFrame(list_of_dicts)
-output_filename = args.lcm_log_path + 'XSENS.csv'
+output_filename = args.lcm_log_path + '-XSENS.csv'
 xsens_dataframe.to_csv(output_filename, sep=';', index=False)
 
 if data_found:
