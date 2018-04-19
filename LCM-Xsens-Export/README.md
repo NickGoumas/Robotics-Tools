@@ -1,5 +1,4 @@
 ## LCM XSENS Eporter
-Files:
 ### lcm-log-export-xsens.py
 Python script to generate a CSV file of XSENS data stored in an LCM log. Written to work with a custom XSENS IMU software driver used on the UMichigan DROP lab's Iver3-3047 stereo camera AUV. 
 
