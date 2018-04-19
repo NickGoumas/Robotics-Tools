@@ -65,10 +65,11 @@ for event in lcm_log:
 
 xsens_dataframe = pd.DataFrame(list_of_dicts)
 output_filename = args.lcm_log_path + '-XSENS.csv'
-xsens_dataframe.to_csv(output_filename, sep=';', index=False)
 
 if data_found:
-    print('XSENS data found and converted')
+    print('XSENS data found, saving...')
+    xsens_dataframe.to_csv(output_filename, sep=';', index=False)
+    print('Done.')
 else:
-    print('No XSENS data found in log')
+    print('No XSENS data found in log.')
 # insert warning if no xsens is found.
