@@ -1,17 +1,36 @@
 #!/usr/bin/env python2
-
+from __future__ import print_function
 import sys
+import argparse
 import pandas as pd
 import numpy as np
 import lcm
 import xsens_t
 
-log_path = sys.argv[1]
+parser = argparse.ArgumentParser(
+    description='A python script to convert XSENS data to CSV files. '+
+    'The CSV output is dropped in the same dir as the lcm log.',
+    epilog='Created by Nick Goumas')
 
+parser.add_argument('input_directory',
+    help='Directory of raw .tif images to debayer.')
+
+args = parser.parse_args()
+
+log_path = args.input_directory
+
+def createDict(event):
+    msg_dict = {}
+    msg = xsens_object.decode(event.data)
+    for attribute in xsens_attrs:
+        msg_dict[attribute] = getattr(msg, attribute)
+    return msg_dict
+
+# Create empty xsens object.
+xsens_object = xsens_t.xsens_t()
+# Open lcm log.
 lcm_log = lcm.EventLog(log_path, mode='r')
-
-#print 'Log Size:{} bytes'.format(lcm_log.size())
-
+# xsens attributes available in the log.
 xsens_attrs = ["utime",
               "count",
               "heading",
@@ -28,27 +47,28 @@ xsens_attrs = ["utime",
               "gyr_y",
               "gyr_z"]
 
-xsens_object = xsens_t.xsens_t()
 
-#xsens_dataframe = pd.DataFrame(data=None, columns=xsens_attrs)
-
+data_found = False
 list_of_dicts = []
-counter = 0
-
-def createDict(event):
-    msg_dict = {}
-    msg = xsens_object.decode(event.data)
-    for attribute in xsens_attrs:
-        msg_dict[attribute] = getattr(msg, attribute)
-    return msg_dict
+#counter = 0
 
 
 for event in lcm_log:
-    if (event.channel == "DROPIVER.XSENS") and (counter < 5):
+    if (event.channel == "DROPIVER.XSENS"):
         msg = xsens_object.decode(event.data)
         list_of_dicts.append(createDict(event))
+        data_found = True
         #counter += 1
 
+    #if counter > 5:
+    #    break
+
 xsens_dataframe = pd.DataFrame(list_of_dicts)
-print(len(xsens_dataframe))
-xsens_dataframe.to_csv('test.csv', sep=';', index=False)
+output_filename = args.input_directory + 'XSENS.csv'
+xsens_dataframe.to_csv(output_filename, sep=';', index=False)
+
+if data_found:
+    print('XSENS data found and converted')
+else:
+    print('No XSENS data found in log')
+# insert warning if no xsens is found.
