@@ -12,12 +12,12 @@ parser = argparse.ArgumentParser(
     'The CSV output is dropped in the same dir as the lcm log.',
     epilog='Created by Nick Goumas')
 
-parser.add_argument('input_directory',
-    help='Directory of raw .tif images to debayer.')
+parser.add_argument('lcm_log_path',
+    help='Path to LCM log file.')
 
 args = parser.parse_args()
 
-log_path = args.input_directory
+log_path = args.lcm_log_path
 
 def createDict(event):
     msg_dict = {}
@@ -64,7 +64,7 @@ for event in lcm_log:
     #    break
 
 xsens_dataframe = pd.DataFrame(list_of_dicts)
-output_filename = args.input_directory + 'XSENS.csv'
+output_filename = args.lcm_log_path + 'XSENS.csv'
 xsens_dataframe.to_csv(output_filename, sep=';', index=False)
 
 if data_found:
