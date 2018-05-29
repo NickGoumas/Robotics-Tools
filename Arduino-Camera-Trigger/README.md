@@ -1,0 +1,1 @@
+This repo's code is to use an Arduino based microcontroller as a hardware camera trigger. Originally put together to work with PointGrey Blackfly PoE 5MP cameras. There are two channels each with an independant framerate. You can update the framerates over serial without the Arduino IDE. This is a quick and dirty script.
